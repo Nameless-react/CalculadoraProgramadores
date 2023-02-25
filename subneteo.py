@@ -6,7 +6,7 @@ from conversor import binario_decimal
 
 def plusOctet(direccion1, direccion2):
     sobra = 0
-    newDirection = []
+    new_direction = []
     for octeto1, octeto2 in zip(direccion1[::-1], direccion2[::-1]):
         suma = int(octeto1) + int(octeto2) + sobra
         sobra = 0
@@ -14,17 +14,17 @@ def plusOctet(direccion1, direccion2):
 
         if suma > 255:
             sobra = suma - 255
-            newDirection.append(str(sobra - 1))
+            new_direction.append(str(sobra - 1))
             sobra = 1
             continue
 
-        newDirection.append(str(suma))
+        new_direction.append(str(suma))
     
-    return newDirection[::-1]
+    return new_direction[::-1]
 
 def minusOctet(direccion1, direccion2):
     sobra = 0
-    newDirection = []
+    new_direction = []
     for octeto1, octeto2 in zip(direccion1[::-1], direccion2[::-1]):
 
         suma = int(octeto1) - int(octeto2) - sobra
@@ -32,12 +32,12 @@ def minusOctet(direccion1, direccion2):
         sobra = 0
         if suma < 0:
             sobra = abs(suma)
-            newDirection.append("255")
+            new_direction.append("255")
             continue
 
-        newDirection.append(str(suma))
+        new_direction.append(str(suma))
 
-    return newDirection[::-1]
+    return new_direction[::-1]
 
 
 def subneteoRed():
