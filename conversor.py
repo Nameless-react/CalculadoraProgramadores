@@ -19,14 +19,14 @@ hexa = {
 
 # *Funciones principales
 def binario(numero):
-    decimal = binarioDecimal(str(numero))
-    hexadecimal = binarioHexadecimal(str(numero))
+    decimal = binario_decimal(str(numero))
+    hexadecimal = binario_hexadecimal(str(numero))
     return f"Binario: {str(numero).zfill(4)}\nDecimal: {decimal}\nHexadecimal: {hexadecimal}"
 
 
 def decimal(numero):
-    binario = decimalBinario(numero)
-    hexadecimal = decimalHexadecimal(numero)
+    binario = decimal_binario(numero)
+    hexadecimal = decimal_hexadecimal(numero)
     return f"Decimal: {numero}\nBinario: {binario.zfill(4)}\nHexadecimal: {hexadecimal}"
 
 def hexadecimal(numero):
@@ -35,8 +35,8 @@ def hexadecimal(numero):
             return "\33[31m\nNúmero hexadecimal no valido\n\033[0m"
 
 
-    binario = hexadecimalBinario(numero)
-    decimal = hexadecimalDecimal(numero)
+    binario = hexadecimal_binario(numero)
+    decimal = hexadecimal_decimal(numero)
     return f"Hexadecimal: {numero}\nBinario: {binario.zfill(4)}\nDecimal: {decimal}"
 
 
@@ -44,7 +44,7 @@ def hexadecimal(numero):
 
 
 
-def binarioDecimal(numero):
+def binario_decimal(numero):
     binario = numero[::-1]
     decimal = 0
     for index, number in enumerate(binario):
@@ -55,7 +55,7 @@ def binarioDecimal(numero):
     return decimal
 
 
-def decimalBinario(numero):
+def decimal_binario(numero):
     decimal = int(numero)
     binario = ""
     while decimal > 0:
@@ -65,18 +65,18 @@ def decimalBinario(numero):
 
     return binario[::-1]
 
-def hexadecimalDecimal(numero):
+def hexadecimal_decimal(numero):
     hexadecimal = numero.upper()
     return int(hexadecimal, 16)
 
-def binarioHexadecimal(binario):
+def binario_hexadecimal(binario):
     return hex(int(binario, 2))[2:].upper()
 
-def decimalHexadecimal(numero):
+def decimal_hexadecimal(numero):
     decimal = int(numero)
     return hex(decimal)[2:].upper()
 
-def hexadecimalBinario(numero):
+def hexadecimal_binario(numero):
     hexadecimal = numero.upper()
     return bin(int(hexadecimal, 16))[2:]
 

@@ -1,6 +1,6 @@
 from tabulate import tabulate
 import re
-from conversor import binarioDecimal
+from conversor import binario_decimal
 
 # *Networks subnetting functions
 
@@ -19,7 +19,7 @@ def plusOctet(direccion1, direccion2):
             continue
 
         newDirection.append(str(suma))
-    print(newDirection)
+    
     return newDirection[::-1]
 
 def minusOctet(direccion1, direccion2):
@@ -28,7 +28,7 @@ def minusOctet(direccion1, direccion2):
     for octeto1, octeto2 in zip(direccion1[::-1], direccion2[::-1]):
 
         suma = int(octeto1) - int(octeto2) - sobra
-        print(suma)
+        
         sobra = 0
         if suma < 0:
             sobra = abs(suma)
@@ -36,13 +36,13 @@ def minusOctet(direccion1, direccion2):
             continue
 
         newDirection.append(str(suma))
-    print(newDirection)
+
     return newDirection[::-1]
 
 
 def subneteoRed():
-    columnNames = ["Red", "IP", "Broadcast", "WildCard", "Máscara", "Máscara decimal", "Hosts totales", "Hosts requeridos", "Rango"]
-    infoNetworks = []
+    column_names = ["Red", "IP", "Broadcast", "WildCard", "Máscara", "Máscara decimal", "Hosts totales", "Hosts requeridos", "Rango"]
+    info_networks = []
 
     redes = 0
     try:
@@ -53,63 +53,64 @@ def subneteoRed():
     
 
     while True:
-        direccionRed = input("Ingrese la direccion de red:\n")
-        match = re.fullmatch("[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*", direccionRed)
+        direccion_red = input("Ingrese la direccion de red:\n")
+        match = re.fullmatch("[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*", direccion_red)
         if match:
             break
 
 
-    direccionRed = direccionRed.split(".")
+
     broadcast = []
-    direcciones = [direccionRed]
+    direccion_red = direccion_red.split(".")
+    direcciones = [direccion_red]
 
 
     for i in range(redes): 
-        mascaraSubredDecimal = []
-        fullMask = [255, 255, 255, 255]
-        hostsRequeridos = int(input("Ingrese la cantidad de host que desea en orden descendiente:\n"))
+        mascara_subred_decimal = []
+        full_mask = [255, 255, 255, 255]
+        hosts_requeridos = int(input("Ingrese la cantidad de host que desea en orden descendiente:\n"))
 
         # *Determinación de la máscara de red
         host = 0
-        while host < hostsRequeridos:
-            if 2**host - 2 >= hostsRequeridos:
+        while host < hosts_requeridos:
+            if 2**host - 2 >= hosts_requeridos:
                 break 
             host += 1
 
-        mascaraSubRed = 32 - host
+        mascara_subred = 32 - host
         
         
         # *Máscara de subred en notación decimal
         for j in range(4):
-            if mascaraSubRed >= 8:
-                mascaraSubredDecimal.append(str(binarioDecimal("11111111")))
-                mascaraSubRed -= 8
+            if mascara_subred >= 8:
+                mascara_subred_decimal.append(str(binario_decimal("11111111")))
+                mascara_subred -= 8
                 continue
 
-            mascaraSubredDecimal.append(str(binarioDecimal(("1" * mascaraSubRed).zfill(8)[::-1])))
-            mascaraSubRed = 0
-    
-        wildCard = [str(full - int(octeto)) for full, octeto in zip(fullMask, mascaraSubredDecimal)]
+            mascara_subred_decimal.append(str(binario_decimal(("1" * mascara_subred).zfill(8)[::-1])))
+            mascara_subred = 0
+        # *Cálculo de la wildCard de la subred
+        wild_card = [str(full - int(octeto)) for full, octeto in zip(full_mask, mascara_subred_decimal)]
     
     
         # *BroadCast y direcciones de las subredes
         if i == 0:
-            broadcast.append(plusOctet(wildCard, direccionRed))
+            broadcast.append(plusOctet(wild_card, direccion_red))
         else:
             direcciones.append(plusOctet(broadcast[len(broadcast) - 1], ["0", "0", "0", "1"]))
-            broadcast.append(plusOctet(wildCard, direcciones[i]))
+            broadcast.append(plusOctet(wild_card, direcciones[i]))
         
 
 
         # *Guardar información de cada subred
-        infoNetworks.append([f"Red {i + 1}",
+        info_networks.append([f"Red {i + 1}",
                         '.'.join(map(lambda x: str(x), direcciones[i])),
                         '.'.join(map(lambda x: str(x), broadcast[i])),
-                        '.'.join(wildCard),
+                        '.'.join(wild_card),
                         32 - host, 
-                        '.'.join(mascaraSubredDecimal),
+                        '.'.join(mascara_subred_decimal),
                         2**host,
-                        hostsRequeridos,
+                        hosts_requeridos,
                         '.'.join(map(lambda x: str(x), plusOctet(direcciones[i], ["0", "0", "0", "1"]))) + " - " + '.'.join(map(lambda x: str(x), minusOctet(broadcast[i], ["0", "0", "0", "1"]))),
                         ])
-    print(tabulate(infoNetworks, headers=columnNames, tablefmt="fancy_grid"))
+    print(tabulate(info_networks, headers=column_names, tablefmt="fancy_grid"))
