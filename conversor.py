@@ -19,12 +19,18 @@ hexa = {
 
 # *Funciones principales
 def binario(numero):
+    if not numero.isnumeric():
+        return f"\33[31m\nNúmero binario no valido\n\033[0m"
+
     decimal = binario_decimal(str(numero))
     hexadecimal = binario_hexadecimal(str(numero))
     return f"Binario: {str(numero).zfill(4)}\nDecimal: {decimal}\nHexadecimal: {hexadecimal}"
 
 
 def decimal(numero):
+    if not numero.isnumeric():
+        return f"\33[31m\nNúmero decimal no valido\n\033[0m"
+
     binario = decimal_binario(numero)
     hexadecimal = decimal_hexadecimal(numero)
     return f"Decimal: {numero}\nBinario: {binario.zfill(4)}\nHexadecimal: {hexadecimal}"
