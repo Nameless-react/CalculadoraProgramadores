@@ -1,4 +1,5 @@
 from tabulate import tabulate
+import xlsxwriter
 import re
 from conversor import binario_decimal
 
@@ -69,6 +70,7 @@ def subneteoRed():
         mascara_subred_decimal = []
         full_mask = [255, 255, 255, 255]
         hosts_requeridos = int(input("Ingrese la cantidad de host que desea en orden descendiente:\n"))
+        nombre_red = input("Ingrese el nombre de la red:\n")
 
         # *Determinación de la máscara de red
         host = 0
@@ -103,14 +105,43 @@ def subneteoRed():
 
 
         # *Guardar información de cada subred
-        info_networks.append([f"Red {i + 1}",
+        info_networks.append([f"{'Red ' + str(i + 1) if len(nombre_red) == 0 else nombre_red}",
                         '.'.join(map(lambda x: str(x), direcciones[i])),
                         '.'.join(map(lambda x: str(x), broadcast[i])),
                         '.'.join(wild_card),
-                        32 - host, 
+                        "/" + str(32 - host), 
                         '.'.join(mascara_subred_decimal),
                         2**host,
                         hosts_requeridos,
                         '.'.join(map(lambda x: str(x), plusOctet(direcciones[i], ["0", "0", "0", "1"]))) + " - " + '.'.join(map(lambda x: str(x), minusOctet(broadcast[i], ["0", "0", "0", "1"]))),
                         ])
     print(tabulate(info_networks, headers=column_names, tablefmt="fancy_grid"))
+
+    #*Archivo de excel
+    guardar = input("Desea que el subneteo se guarde en un archivo Excel (s/n): ").lower()[0] == "s"
+
+    if not guardar:
+        return
+    
+    excel_name = input("Digite el nombre que desea que tenga el archivo de Excel: ")
+    workbook = xlsxwriter.Workbook(excel_name + ".xlsx")
+    worksheet = workbook.add_worksheet("Página 1")
+    
+    row = 2
+    column = 0
+    worksheet.write(0,0, "IP principal: ")
+    worksheet.write(0,1, ".".join(direccion_red))
+    for item in column_names:
+        cell_format = workbook.add_format({"bold": True, "bg_color": "cyan"})
+        worksheet.write(row, column, item, cell_format)
+        column += 1
+
+    row += 1
+    for item in info_networks:
+        column = 0
+        for i in range(len(column_names)):
+            worksheet.write(row, column, item[i])
+            column += 1
+        row += 1
+        
+    workbook.close()

@@ -5,7 +5,7 @@ from conversor import functions
 
 def conversiones():
     while True:
-        operacion = input("""Digite el tipo de número: 
+        operacion = input("""Digite el tipo de número a convertir: 
 b) binario
 d) decimal
 h) hexadecimal
@@ -13,7 +13,9 @@ s) salir
 """).lower()
         if operacion == "s":
             break
-        action = functions.get(operacion, lambda x: print(f"\33[31m\nOperación '{operacion}' no valida\n\033[0m"))
+
+
+        action = functions.get(operacion, lambda x: print(f"\33[31m\n{'#' * 20}Operación '{operacion}' no valida{'#' * 20}\n\033[0m"))
         if not action("0"):
             continue
 
